@@ -1,5 +1,5 @@
 {
-  "name": "streamhelper",
+  "name": "@halleyassist/streamhelper",
   "version": "0.9.0",
   "description": "Stream helper functions",
   "main": "index.js",

@@ -27,8 +27,6 @@ jobs:
     - name: Install modules
       run: |
         npm install
-    - name: Test
-      run: npm test
     - run: |
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,' | sed -e 's/^v//')
         jq '.version="'"$VERSION"'"' package.json > /tmp/a
