@@ -22,5 +22,9 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.2.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
