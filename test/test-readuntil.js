@@ -1,6 +1,6 @@
 const chai = require("chai"),
-    Stream = require("stream"),
-    StreamHelper = require('..')
+      Stream = require("stream"),
+      StreamHelper = require('..')
 
 chai.use(require("chai-as-promised"));
 
@@ -24,5 +24,12 @@ describe("readUntil", function(){
         })
 
         await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("This is not for us\n")
+    })
+    it("should read until stream end", async function(){
+        const stream = new Stream.PassThrough()
+        let ret = StreamHelper.streamReadUntil(stream, null)
+        stream.write("Hello World\nThis is not for us\n")
+        stream.end()
+        await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("Hello World\nThis is not for us\n")
     })
 })
