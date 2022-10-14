@@ -12,7 +12,7 @@ describe('Examples', () => {
   
       const readable = fs.createReadStream(__dirname+'/resources/JPEG_example_JPG_RIP_001.jpg');
       const streamReader = new StreamReader(readable);
-      const uint8Array = new Uint8Array(16);
+      const uint8Array = Buffer.alloc(16);
       const bytesRead = await streamReader.read(uint8Array, 0, 16);
       assert.equal(bytesRead, 16);
     });
@@ -21,7 +21,7 @@ describe('Examples', () => {
   
       const fileReadStream = fs.createReadStream(__dirname+'/resources/JPEG_example_JPG_RIP_001.jpg');
       const streamReader = new StreamReader(fileReadStream);
-      const uint8Array =  new Uint8Array(16);
+      const uint8Array = Buffer.alloc(16);
       assert.equal(await streamReader.read(uint8Array, 0, 16), 16);
       try {
         while(await streamReader.read(uint8Array, 0, 1) > 0);
