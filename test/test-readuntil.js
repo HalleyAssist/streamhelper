@@ -32,4 +32,11 @@ describe("readUntil", function(){
         stream.end()
         await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("Hello World\nThis is not for us\n")
     })
+    it("should read until stream close", async function(){
+        const stream = new Stream.PassThrough()
+        let ret = StreamHelper.streamReadUntil(stream, null)
+        stream.write("Hello World\nThis is not for us\n")
+        stream.emit('close')
+        await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("Hello World\nThis is not for us\n")
+    })
 })

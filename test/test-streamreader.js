@@ -1,3 +1,4 @@
+const Q = require('@halleyassist/q-lite');
 const {assert} = require('chai'),
       chai = require("chai"),
       fs = require('fs'),
@@ -83,13 +84,38 @@ describe('Examples', () => {
 
             await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("This is not for us\n")
         })
-        it("AA should read until stream end", async function(){
+        it("should read until stream end", async function(){
             const stream = new Stream.PassThrough()
             const streamReader = new StreamReader(stream);
             let ret = streamReader.readUntil()
             stream.write("Hello World\nThis is not for us\n")
             stream.end()
             await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("Hello World\nThis is not for us\n")
+        })
+        it("should read until stream close", async function(){
+            const stream = new Stream.PassThrough()
+            const streamReader = new StreamReader(stream);
+            let ret = streamReader.readUntil()
+            stream.write("Hello World\nThis is not for us\n")
+            await Q.delay(1)
+            stream.emit('close')
+            await chai.expect(ret.then(a=>a.toString("utf8"))).to.eventually.equal("Hello World\nThis is not for us\n")
+        })
+        it("should read until stream end in parts", async function(){
+            const stream = new Stream.PassThrough()
+            const streamReader = new StreamReader(stream);
+            stream.write("Hello World\nThis is not for us\n")
+            stream.end()
+            await chai.expect(streamReader.readUntil(null, a=>a == "\n".charCodeAt(0)).then(a=>a.toString("utf8"))).to.eventually.equal("Hello World\n")
+            await chai.expect(streamReader.readUntil().then(a=>a.toString("utf8"))).to.eventually.equal("This is not for us\n")
+        })
+        it("should read stream end in parts", async function(){
+            const stream = new Stream.PassThrough()
+            const streamReader = new StreamReader(stream);
+            stream.write("1This is not for us\n")
+            stream.end()
+            await streamReader.read(1)
+            await chai.expect(streamReader.readUntil().then(a=>a.toString("utf8"))).to.eventually.equal("This is not for us\n")
         })
     })
   });
